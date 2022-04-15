@@ -299,4 +299,32 @@ class NumberComputeServiceTest {
             assertThat(computedNumbers).isEqualTo(10807);
         }
     }
+
+    @Nested
+    class Step4Test {
+
+        @Test
+        void add_when_specify_single_char_delimiter_should_use_delimiter() {
+            // GIVEN
+            var numbers = "// \n45 16 78";
+
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumbers).isEqualTo(139);
+        }
+
+        @Test
+        void add_when_specify_single_char_delimiter_should_use_delimiter_with_comma_and_linefeed() {
+            // GIVEN
+            var numbers = "// \n45,16 78\n11";
+
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumbers).isEqualTo(150);
+        }
+    }
 }
