@@ -8,8 +8,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class NumberComputeServiceTest
-{
+class NumberComputeServiceTest {
     private NumberComputeService numberComputeService;
 
     @BeforeEach
@@ -164,6 +163,140 @@ class NumberComputeServiceTest
 
             // THEN
             assertThat(computedNumbers).isEqualTo(1542);
+        }
+    }
+
+    @Nested
+    class Step3Test {
+
+        @Test
+        void add_when_two_single_digit_numbers_with_linefeed_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "5\n9";
+
+            // WHEN
+            var computedNumber = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumber).isEqualTo(14);
+        }
+
+        @Test
+        void add_when_single_digit_and_several_digit_numbers_with_linefeed_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "5\n178";
+
+            // WHEN
+            var computedNumber = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumber).isEqualTo(183);
+        }
+
+        @Test
+        void add_when_several_digit_and_single_digit_numbers_with_linefeed_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "178\n5";
+
+            // WHEN
+            var computedNumber = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumber).isEqualTo(183);
+        }
+
+        @Test
+        void add_when_several_digit_numbers_with_linefeed_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "178\n5431";
+
+            // WHEN
+            var computedNumber = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumber).isEqualTo(5609);
+        }
+
+        @Test
+        void add_when_three_single_digit_numbers_with_coma_and_linefeed_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "2,1\n7";
+
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumbers).isEqualTo(10);
+        }
+
+        @Test
+        void add_when_three_single_digit_numbers_with_linefeed_and_coma_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "2\n1,7";
+
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumbers).isEqualTo(10);
+        }
+
+        @Test
+        void add_when_three_single_digit_numbers_with_two_linefeed_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "2\n1\n7";
+
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumbers).isEqualTo(10);
+        }
+
+        @Test
+        void add_when_three_several_digit_numbers_with_comma_and_linefeed_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "784,10000\n23";
+
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumbers).isEqualTo(10807);
+        }
+
+        @Test
+        void add_when_three_several_digit_numbers_with_linefeed_and_comma_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "784\n10000,23";
+
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumbers).isEqualTo(10807);
+        }
+
+        @Test
+        void add_when_three_several_digit_numbers_with_two_linefeed_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "784\n10000\n23";
+
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumbers).isEqualTo(10807);
         }
     }
 }
