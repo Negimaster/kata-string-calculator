@@ -19,7 +19,7 @@ public class NumberComputeService
         var bodyAndDelimiter = getBodyAndDelimiter(numbers);
 
         var body = bodyAndDelimiter.first();
-        var delimiters = "[,\n]" + bodyAndDelimiter.second().map(delimiter -> "|" + delimiter).orElse("");
+        var delimiters = "[,\n]" + bodyAndDelimiter.second().map(delimiter -> "|\\Q" + delimiter + "\\E").orElse("");
 
         var splitNumbers = Arrays.stream(body.split(delimiters, -1)).mapToInt(Integer::parseInt).toArray();
 
