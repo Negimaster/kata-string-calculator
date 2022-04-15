@@ -13,7 +13,7 @@ public class NumberComputeService
             return 0;
         }
 
-        var splitNumbers = numbers.split(",", -1);
+        var splitNumbers = numbers.split("[,\n]", -1);
 
         return Arrays.stream(splitNumbers).mapToInt(Integer::parseInt).sum();
     }
