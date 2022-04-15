@@ -50,13 +50,13 @@ class NumberComputeServiceTest {
         void add_when_single_number_several_digits_should_return_number()
         {
             // GIVEN
-            var numbers = "314271";
+            var numbers = "311";
 
             // WHEN
             var computedNumber = numberComputeService.add(numbers);
 
             // THEN
-            assertThat(computedNumber).isEqualTo(314271);
+            assertThat(computedNumber).isEqualTo(311);
         }
 
         @Test
@@ -102,13 +102,13 @@ class NumberComputeServiceTest {
         void add_when_several_digit_numbers_should_return_sum()
         {
             // GIVEN
-            var numbers = "178,5431";
+            var numbers = "178,431";
 
             // WHEN
             var computedNumber = numberComputeService.add(numbers);
 
             // THEN
-            assertThat(computedNumber).isEqualTo(5609);
+            assertThat(computedNumber).isEqualTo(609);
         }
     }
 
@@ -132,26 +132,26 @@ class NumberComputeServiceTest {
         void add_when_three_several_digit_numbers_should_return_sum()
         {
             // GIVEN
-            var numbers = "784,10000,23";
+            var numbers = "784,1000,23";
 
             // WHEN
             var computedNumbers = numberComputeService.add(numbers);
 
             // THEN
-            assertThat(computedNumbers).isEqualTo(10807);
+            assertThat(computedNumbers).isEqualTo(1807);
         }
 
         @Test
         void add_when_four_numbers_should_return_sum()
         {
             // GIVEN
-            var numbers = "45,9999,732,7";
+            var numbers = "45,999,732,7";
 
             // WHEN
             var computedNumbers = numberComputeService.add(numbers);
 
             // THEN
-            assertThat(computedNumbers).isEqualTo(10783);
+            assertThat(computedNumbers).isEqualTo(1783);
         }
 
         @Test
@@ -214,13 +214,13 @@ class NumberComputeServiceTest {
         void add_when_several_digit_numbers_with_linefeed_should_return_sum()
         {
             // GIVEN
-            var numbers = "178\n5431";
+            var numbers = "178\n531";
 
             // WHEN
             var computedNumber = numberComputeService.add(numbers);
 
             // THEN
-            assertThat(computedNumber).isEqualTo(5609);
+            assertThat(computedNumber).isEqualTo(709);
         }
 
         @Test
@@ -266,39 +266,39 @@ class NumberComputeServiceTest {
         void add_when_three_several_digit_numbers_with_comma_and_linefeed_should_return_sum()
         {
             // GIVEN
-            var numbers = "784,10000\n23";
+            var numbers = "784,1000\n23";
 
             // WHEN
             var computedNumbers = numberComputeService.add(numbers);
 
             // THEN
-            assertThat(computedNumbers).isEqualTo(10807);
+            assertThat(computedNumbers).isEqualTo(1807);
         }
 
         @Test
         void add_when_three_several_digit_numbers_with_linefeed_and_comma_should_return_sum()
         {
             // GIVEN
-            var numbers = "784\n10000,23";
+            var numbers = "784\n1000,23";
 
             // WHEN
             var computedNumbers = numberComputeService.add(numbers);
 
             // THEN
-            assertThat(computedNumbers).isEqualTo(10807);
+            assertThat(computedNumbers).isEqualTo(1807);
         }
 
         @Test
         void add_when_three_several_digit_numbers_with_two_linefeed_should_return_sum()
         {
             // GIVEN
-            var numbers = "784\n10000\n23";
+            var numbers = "784\n1000\n23";
 
             // WHEN
             var computedNumbers = numberComputeService.add(numbers);
 
             // THEN
-            assertThat(computedNumbers).isEqualTo(10807);
+            assertThat(computedNumbers).isEqualTo(1807);
         }
     }
 
@@ -377,6 +377,47 @@ class NumberComputeServiceTest {
                     .isExactlyInstanceOf(NegativeNumbersForbiddenException.class)
                     .hasMessageContainingAll("-42", "-12")
                     .hasMessageNotContainingAny("6", "789");
+        }
+    }
+    
+    @Nested
+    class Step6Test {
+
+        // In english, "greater" is strict, as opposed to french
+        @Test
+        void add_when_one_thousand_should_return_1000() {
+            // GIVEN
+            var numbers = "1000";
+
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumbers).isEqualTo(1000);
+        }
+
+        @Test
+        void add_when_more_than_one_thousand_should_return_0() {
+            // GIVEN
+            var numbers = "1001";
+
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumbers).isEqualTo(0);
+        }
+
+        @Test
+        void add_when_add_more_than_one_thousand_should_return_0() {
+            // GIVEN
+            var numbers = "42,1001,12,95563";
+
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumbers).isEqualTo(54);
         }
     }
 }

@@ -28,7 +28,7 @@ public class NumberComputeService
             throw new NegativeNumbersForbiddenException(String.format("negatives not allowed: %s", Arrays.toString(negativeNumbers)));
         }
 
-        return Arrays.stream(splitNumbers).sum();
+        return Arrays.stream(splitNumbers).filter(n -> n <= 1000).sum();
     }
 
     private Pair<String, Optional<String>> getBodyAndDelimiter(String numbers) {
