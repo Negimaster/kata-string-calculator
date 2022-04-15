@@ -1,6 +1,7 @@
 package org.kata.compute.numbers;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -17,92 +18,152 @@ class NumberComputeServiceTest
         numberComputeService = new NumberComputeService();
     }
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    void add_when_null_or_empty_should_return_0(String numbers)
-    {
-        // WHEN
-        var computedNumber = numberComputeService.add(numbers);
+    @Nested
+    class Step1Test {
 
-        // THEN
-        assertThat(computedNumber).isEqualTo(0);
+        @ParameterizedTest
+        @NullAndEmptySource
+        void add_when_null_or_empty_should_return_0(String numbers)
+        {
+            // WHEN
+            var computedNumber = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumber).isEqualTo(0);
+        }
+
+        @Test
+        void add_when_single_digit_should_return_digit()
+        {
+            // GIVEN
+            var numbers = "5";
+
+            // WHEN
+            var computedNumber = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumber).isEqualTo(5);
+        }
+
+        @Test
+        void add_when_single_number_several_digits_should_return_number()
+        {
+            // GIVEN
+            var numbers = "314271";
+
+            // WHEN
+            var computedNumber = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumber).isEqualTo(314271);
+        }
+
+        @Test
+        void add_when_two_single_digit_numbers_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "5,9";
+
+            // WHEN
+            var computedNumber = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumber).isEqualTo(14);
+        }
+
+        @Test
+        void add_when_single_digit_and_several_digit_numbers_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "5,178";
+
+            // WHEN
+            var computedNumber = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumber).isEqualTo(183);
+        }
+
+        @Test
+        void add_when_several_digit_and_single_digit_numbers_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "178,5";
+
+            // WHEN
+            var computedNumber = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumber).isEqualTo(183);
+        }
+
+        @Test
+        void add_when_several_digit_numbers_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "178,5431";
+
+            // WHEN
+            var computedNumber = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumber).isEqualTo(5609);
+        }
     }
 
-    @Test
-    void add_when_single_digit_should_return_digit()
-    {
-        // GIVEN
-        var numbers = "5";
+    @Nested
+    class Step2Test {
 
-        // WHEN
-        var computedNumber = numberComputeService.add(numbers);
+        @Test
+        void add_when_three_single_digit_numbers_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "2,1,7";
 
-        // THEN
-        assertThat(computedNumber).isEqualTo(5);
-    }
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
 
-    @Test
-    void add_when_single_number_several_digits_should_return_number()
-    {
-        // GIVEN
-        var numbers = "314271";
+            // THEN
+            assertThat(computedNumbers).isEqualTo(10);
+        }
 
-        // WHEN
-        var computedNumber = numberComputeService.add(numbers);
+        @Test
+        void add_when_three_several_digit_numbers_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "784,10000,23";
 
-        // THEN
-        assertThat(computedNumber).isEqualTo(314271);
-    }
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
 
-    @Test
-    void add_when_two_single_digit_numbers_should_return_sum()
-    {
-        // GIVEN
-        var numbers = "5,9";
+            // THEN
+            assertThat(computedNumbers).isEqualTo(10807);
+        }
 
-        // WHEN
-        var computedNumber = numberComputeService.add(numbers);
+        @Test
+        void add_when_four_numbers_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "45,9999,732,7";
 
-        // THEN
-        assertThat(computedNumber).isEqualTo(14);
-    }
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
 
-    @Test
-    void add_when_single_digit_and_several_digit_numbers_should_return_sum()
-    {
-        // GIVEN
-        var numbers = "5,178";
+            // THEN
+            assertThat(computedNumbers).isEqualTo(10783);
+        }
 
-        // WHEN
-        var computedNumber = numberComputeService.add(numbers);
+        @Test
+        void add_when_ten_several_digit_numbers_should_return_sum()
+        {
+            // GIVEN
+            var numbers = "12,3,488,15,94,1,74,3,842,10";
 
-        // THEN
-        assertThat(computedNumber).isEqualTo(183);
-    }
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
 
-    @Test
-    void add_when_several_digit_and_single_digit_numbers_should_return_sum()
-    {
-        // GIVEN
-        var numbers = "178,5";
-
-        // WHEN
-        var computedNumber = numberComputeService.add(numbers);
-
-        // THEN
-        assertThat(computedNumber).isEqualTo(183);
-    }
-
-    @Test
-    void add_when_several_digit_numbers_should_return_sum()
-    {
-        // GIVEN
-        var numbers = "178,5431";
-
-        // WHEN
-        var computedNumber = numberComputeService.add(numbers);
-
-        // THEN
-        assertThat(computedNumber).isEqualTo(5609);
+            // THEN
+            assertThat(computedNumbers).isEqualTo(1542);
+        }
     }
 }

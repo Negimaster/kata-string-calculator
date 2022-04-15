@@ -2,6 +2,7 @@ package org.kata.compute.numbers;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.OptionalInt;
 
 @Service
@@ -12,18 +13,8 @@ public class NumberComputeService
             return 0;
         }
 
-        var numberPair = splitNumbers(numbers);
+        var splitNumbers = numbers.split(",", -1);
 
-        return numberPair.first() + numberPair.second().orElse(0);
-    }
-
-    private NumberPair splitNumbers(String numbers) {
-        var numberSplit = numbers.split(",", -1);
-
-        return switch (numberSplit.length) {
-            case 1 -> new NumberPair(Integer.parseInt(numberSplit[0]), OptionalInt.empty());
-            case 2 -> new NumberPair(Integer.parseInt(numberSplit[0]), OptionalInt.of(Integer.parseInt(numberSplit[1])));
-            default -> throw new IllegalArgumentException(String.format("Argument should have at most one comma: \"%s\"", numbers));
-        };
+        return Arrays.stream(splitNumbers).mapToInt(Integer::parseInt).sum();
     }
 }
