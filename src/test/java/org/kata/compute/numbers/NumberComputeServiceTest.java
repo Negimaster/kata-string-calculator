@@ -5,8 +5,10 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.kata.compute.numbers.exception.NegativeNumbersForbiddenException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class NumberComputeServiceTest {
     private NumberComputeService numberComputeService;
@@ -325,6 +327,56 @@ class NumberComputeServiceTest {
 
             // THEN
             assertThat(computedNumbers).isEqualTo(150);
+        }
+    }
+
+    @Nested
+    class Step5Test {
+
+        @Test
+        void add_when_single_negative_number_should_throw_NegativeNumbersForbiddenException_and_contain_number() {
+            // GIVEN
+            var numbers = "-42";
+
+            // WHEN / THEN
+            assertThatThrownBy(() -> numberComputeService.add(numbers))
+                    .isExactlyInstanceOf(NegativeNumbersForbiddenException.class)
+                    .hasMessageContaining("-42");
+        }
+
+        @Test
+        void add_when_several_negative_number_should_throw_NegativeNumbersForbiddenException_and_contain_all_numbers() {
+            // GIVEN
+            var numbers = "-42,-6,-12";
+
+            // WHEN / THEN
+            assertThatThrownBy(() -> numberComputeService.add(numbers))
+                    .isExactlyInstanceOf(NegativeNumbersForbiddenException.class)
+                    .hasMessageContainingAll("-42", "-6", "-12");
+        }
+
+        @Test
+        void add_when_several_negative_number_should_throw_NegativeNumbersForbiddenException_and_contain_only_negative_numbers() {
+            // GIVEN
+            var numbers = "789,-42,6,-12";
+
+            // WHEN / THEN
+            assertThatThrownBy(() -> numberComputeService.add(numbers))
+                    .isExactlyInstanceOf(NegativeNumbersForbiddenException.class)
+                    .hasMessageContainingAll("-42", "-12")
+                    .hasMessageNotContainingAny("6", "789");
+        }
+
+        @Test
+        void add_when_with_delimiter_several_negative_number_should_throw_NegativeNumbersForbiddenException_and_contain_only_negative_numbers() {
+            // GIVEN
+            var numbers = "//a\n789,-42a6,-12";
+
+            // WHEN / THEN
+            assertThatThrownBy(() -> numberComputeService.add(numbers))
+                    .isExactlyInstanceOf(NegativeNumbersForbiddenException.class)
+                    .hasMessageContainingAll("-42", "-12")
+                    .hasMessageNotContainingAny("6", "789");
         }
     }
 }
