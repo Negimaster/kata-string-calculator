@@ -427,7 +427,7 @@ class NumberComputeServiceTest {
         @Test
         void add_when_specify_multiple_char_delimiter_should_use_delimiter() {
             // GIVEN
-            var numbers = "//***\n45***16***78";
+            var numbers = "//[***]\n45***16***78";
 
             // WHEN
             var computedNumbers = numberComputeService.add(numbers);
@@ -439,7 +439,7 @@ class NumberComputeServiceTest {
         @Test
         void add_when_specify_multiple_char_delimiter_should_use_delimiter_with_comma_and_linefeed() {
             // GIVEN
-            var numbers = "//****\n45,16****78\n11";
+            var numbers = "//[****]\n45,16****78\n11";
 
             // WHEN
             var computedNumbers = numberComputeService.add(numbers);

@@ -34,7 +34,18 @@ public class NumberComputeService
     private Pair<String, Optional<String>> getBodyAndDelimiter(String numbers) {
         if (numbers.startsWith("//")) {
             var headerAndBody = numbers.split("[\n]", 2);
-            var delimiter = headerAndBody[0].substring(2);
+            var delimiterGroup = headerAndBody[0].substring(2);
+
+            if (delimiterGroup.isEmpty()) {
+                throw new IllegalArgumentException("Delimiter suggestion should not be empty");
+            }
+
+            String delimiter;
+            if (delimiterGroup.charAt(0) == '[' && delimiterGroup.charAt(delimiterGroup.length() - 1) == ']') {
+                delimiter = delimiterGroup.substring(1, delimiterGroup.length() - 1);
+            } else {
+                delimiter = delimiterGroup;
+            }
 
             if (delimiter.isEmpty()) {
                 throw new IllegalArgumentException("Delimiter suggestion should not be empty");
