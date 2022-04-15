@@ -1,5 +1,6 @@
 package org.kata.compute.numbers;
 
+import org.kata.compute.numbers.exception.NegativeNumbersForbiddenException;
 import org.kata.compute.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,14 @@ public class NumberComputeService
         var body = bodyAndDelimiter.first();
         var delimiters = "[,\n]" + bodyAndDelimiter.second().map(delimiter -> "|" + delimiter).orElse("");
 
-        var splitNumbers = body.split(delimiters, -1);
+        var splitNumbers = Arrays.stream(body.split(delimiters, -1)).mapToInt(Integer::parseInt).toArray();
 
-        return Arrays.stream(splitNumbers).mapToInt(Integer::parseInt).sum();
+        var negativeNumbers = Arrays.stream(splitNumbers).filter(n -> n < 0).toArray();
+        if (negativeNumbers.length != 0) {
+            throw new NegativeNumbersForbiddenException(String.format("negatives not allowed: %s", Arrays.toString(negativeNumbers)));
+        }
+
+        return Arrays.stream(splitNumbers).sum();
     }
 
     private Pair<String, Optional<String>> getBodyAndDelimiter(String numbers) {
