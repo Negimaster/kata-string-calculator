@@ -7,6 +7,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.kata.compute.numbers.exception.NegativeNumbersForbiddenException;
 
+import java.util.regex.Pattern;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -446,6 +448,34 @@ class NumberComputeServiceTest {
 
             // THEN
             assertThat(computedNumbers).isEqualTo(150);
+        }
+    }
+
+    @Nested
+    class Step8Test {
+
+        @Test
+        void add_when_specify_several_multiple_char_delimiters_should_use_delimiters() {
+            // GIVEN
+            var numbers = "//[***][a][DELIMITER]\n45***16a78DELIMITER982";
+
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumbers).isEqualTo(1121);
+        }
+
+        @Test
+        void add_when_specify_several_multiple_char_delimiters_should_use_delimiters_with_comma_and_linefeed() {
+            // GIVEN
+            var numbers = "//[***][a][DELIMITER]\n45***16a78\n454DELIMITER982,741";
+
+            // WHEN
+            var computedNumbers = numberComputeService.add(numbers);
+
+            // THEN
+            assertThat(computedNumbers).isEqualTo(2316);
         }
     }
 }
