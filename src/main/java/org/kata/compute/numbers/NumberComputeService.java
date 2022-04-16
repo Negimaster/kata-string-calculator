@@ -5,8 +5,14 @@ import org.kata.compute.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import static java.util.Collections.emptyList;
 
 @Service
 public class NumberComputeService
@@ -16,10 +22,14 @@ public class NumberComputeService
             return 0;
         }
 
-        var bodyAndDelimiter = getBodyAndDelimiter(numbers);
+        var bodyAndDelimiters = getBodyAndDelimiters(numbers);
 
-        var body = bodyAndDelimiter.first();
-        var delimiters = "[,\n]" + bodyAndDelimiter.second().map(delimiter -> "|\\Q" + delimiter + "\\E").orElse("");
+        var body = bodyAndDelimiters.first();
+        var delimiters = "[,\n]" +
+                bodyAndDelimiters.second()
+                .stream()
+                .map(delimiter -> "|\\Q" + delimiter + "\\E") // escape special characters for regex
+                .collect(Collectors.joining());
 
         var splitNumbers = Arrays.stream(body.split(delimiters, -1)).mapToInt(Integer::parseInt).toArray();
 
@@ -31,31 +41,33 @@ public class NumberComputeService
         return Arrays.stream(splitNumbers).filter(n -> n <= 1000).sum();
     }
 
-    private Pair<String, Optional<String>> getBodyAndDelimiter(String numbers) {
+    private Pair<String, List<String>> getBodyAndDelimiters(String numbers) {
         if (numbers.startsWith("//")) {
             var headerAndBody = numbers.split("[\n]", 2);
-            var delimiterGroup = headerAndBody[0].substring(2);
-
-            if (delimiterGroup.isEmpty()) {
-                throw new IllegalArgumentException("Delimiter suggestion should not be empty");
-            }
-
-            String delimiter;
-            if (delimiterGroup.charAt(0) == '[' && delimiterGroup.charAt(delimiterGroup.length() - 1) == ']') {
-                delimiter = delimiterGroup.substring(1, delimiterGroup.length() - 1);
-            } else {
-                delimiter = delimiterGroup;
-            }
-
-            if (delimiter.isEmpty()) {
-                throw new IllegalArgumentException("Delimiter suggestion should not be empty");
-            }
-
+            var delimitersLine = headerAndBody[0].substring(2);
             var body = headerAndBody[1];
 
-            return new Pair<>(body, Optional.of(delimiter));
+            if (delimitersLine.isEmpty()) {
+                throw new IllegalArgumentException("Delimiter suggestion should not be empty");
+            }
+
+            // One single character delimiter
+            if (delimitersLine.length() == 1) {
+                return new Pair<>(body, Collections.singletonList(delimitersLine));
+            } else {
+                Pattern delimiterPattern = Pattern.compile("\\[([^]]*)]");
+                Matcher delimitersMatcher = delimiterPattern.matcher(delimitersLine);
+
+                var delimiters = delimitersMatcher.results().map(match -> match.group(1)).toList();
+
+                if (delimiters.isEmpty() || delimiters.stream().anyMatch(String::isEmpty)) {
+                    throw new IllegalArgumentException("Delimiter suggestion should not be empty");
+                }
+
+                return new Pair<>(body, delimiters);
+            }
         } else {
-            return new Pair<>(numbers, Optional.empty());
+            return new Pair<>(numbers, emptyList());
         }
     }
 }
